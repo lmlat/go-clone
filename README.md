@@ -1,4 +1,9 @@
 # go-clone
+
+[![GoDoc](https://godoc.org/github.com/lmlat/go-clone?status.png)](https://pkg.go.dev/github.com/lmlat/go-clone)
+[![Go Report Card](https://goreportcard.com/badge/github.com/lmlat/go-clone)](https://goreportcard.com/report/github.com/lmlat/go-clone)
+[![Coverage Status](https://coveralls.io/repos/github/lmlat/go-clone/badge.svg?branch=master)](https://coveralls.io/github/lmlat/go-clone?branch=master)
+
 This project is based on the Go language development cloning toolkit and supports shallow and deep copy operations of all types of data in the Go language.
 
 When deep or shallow copy struct type data, you can manipulate exported or unexported fields.

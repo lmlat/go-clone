@@ -6,11 +6,15 @@ package clone
  **/
 
 type Cloneable interface {
-	// Clone 浅克隆会创建一个新对象, 并将源对象的字段值拷贝到新对象中.
-	// 如果源对象中包含引用类型数据, 浅克隆只会拷贝引用, 并不会拷贝引用对象本身.
-	// 也就是说, 源对象和克隆对象将共享相同的引用对象(只拷贝对象的顶层结构, 而嵌套对象仍然是原始对象的引用)
+	// Clone shallow clone creates a new object and copies the field values of the source object to the new object.
+	//
+	// If the source object contains reference type data, the shallow clone copies only the reference, not the reference object itself.
+	//
+	// That is, the source and clone objects will share the same reference object (only the top-level structure of the
+	// object is copied, while the nested object is still a reference to the original object)
 	Clone() any
 
-	// DeepClone 深克隆会创建一个新对象, 它会递归拷贝源对象及其所有嵌套对象的字段值, 确保克隆对象是完全独立的, 不存在任何共享引用对象.
+	// DeepClone deep cloning creates a new object, which recursively copies the field values of the source object and all its
+	// nested objects, ensuring that the cloned object is completely independent and does not have any shared reference objects.
 	DeepClone() any
 }
