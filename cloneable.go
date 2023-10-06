@@ -1,8 +1,8 @@
-package clone
+package cloner
 
 /**
  * @Author AiTao
- * @Date 2023/9/15 16:48
+ * @Date 2023/6/15 10:48
  **/
 
 type Cloneable interface {
