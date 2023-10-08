@@ -10,7 +10,7 @@ import (
  **/
 
 // Deep returns the copy value after a deep-cloned source object.
-func Deep(src any) (dst any) {
+func Deep(src any, options ...Options) (dst any) {
 	if src == nil {
 		return nil
 	}
@@ -18,11 +18,11 @@ func Deep(src any) (dst any) {
 	if !srcValue.IsValid() {
 		return nil
 	}
-	if isBasicType(srcValue.Kind()) {
-		return src
-	}
 	dstElem := rnew(srcValue).Elem()
-	deepcopy(srcValue, dstElem)
+	for _, option := range options {
+		option(ctx)
+	}
+	deepCopy(srcValue, dstElem)
 	return dstElem.Interface()
 }
 
@@ -35,10 +35,7 @@ func Shallow(src any) (dst any) {
 	if !srcValue.IsValid() {
 		return nil
 	}
-	if isBasicType(srcValue.Kind()) {
-		return src
-	}
-	dstElem := rnew(srcValue).Elem()
-	dstElem.Set(srcValue)
-	return dstElem.Interface()
+	dstValue := rnew(srcValue)
+	shallowCopy(srcValue, dstValue.UnsafePointer())
+	return dstValue.Elem().Interface()
 }
