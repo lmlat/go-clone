@@ -185,34 +185,6 @@ type C struct {
 	hobby    []string
 }
 
-func TestDeepClone_StructC(t *testing.T) {
-	src := C{"aitao", 100, time.Now(), []string{"ping pong", "badminton", "football"}}
-	dst := Deep(src).(C)
-	fmt.Printf("%+v\n", src)
-	fmt.Printf("%+v\n\n", dst)
-
-	dst.name = "哆啦A梦" // modify an unreferenced type value.
-	fmt.Printf("%+v\n", src)
-	fmt.Printf("%+v\n\n", dst)
-
-	dst.hobby[0] = "乒乓球" // modify a referenced type value.
-	fmt.Printf("%+v\n", src)
-	fmt.Printf("%+v\n\n", dst)
-
-	// 只拷贝结构体中的已导出字段
-	dst = Deep(src, WithOpFlags(OnlyPublicField)).(C)
-	fmt.Printf("%+v %p\n", src, &src)
-	fmt.Printf("%+v %p\n\n", dst, &dst)
-
-	dst.name = "kqai"
-	fmt.Printf("%+v %p\n", src, &src)
-	fmt.Printf("%+v %p\n\n", dst, &dst)
-
-	dst = CopyProperties(src).(C)
-	fmt.Printf("%+v %p\n", src, &src)
-	fmt.Printf("%+v %p\n\n", dst, &dst)
-}
-
 func TestDeepClone_Struct_Pointer(t *testing.T) {
 	src := &C{"aitao", 100, time.Now(), []string{"ping pong", "badminton", "football"}}
 	dst := Deep(src).(*C)
@@ -266,12 +238,12 @@ type B struct {
 func TestDeepClone_StructA(t *testing.T) {
 	src := A{
 		Int:    42,
-		String: "Konichiwa",
+		String: "Aitao",
 		uints:  []uint{0, 1, 2, 3},
 		MapA:   map[string]int{"a": 1, "b": 2},
 		MapB: map[string]*B{
-			"hi":  &B{Vals: []string{"hello", "bonjour"}},
-			"bye": &B{Vals: []string{"good-bye", "au revoir"}},
+			"hi":  {Vals: []string{"hello", "bonjour"}},
+			"bye": {Vals: []string{"good-bye", "au revoir"}},
 		},
 		bs: []B{
 			{Vals: []string{"Ciao", "Aloha"}},
@@ -283,7 +255,7 @@ func TestDeepClone_StructA(t *testing.T) {
 	fmt.Printf("%+v %p\n", src, &src)
 	fmt.Printf("%+v %p\n\n", dst, &dst)
 
-	dst.uints[0] = 1000
+	dst.uints[2] = 1000
 	fmt.Printf("%+v %p\n", src, &src)
 	fmt.Printf("%+v %p\n", dst, &dst)
 }
@@ -355,18 +327,6 @@ type G struct {
 	Age   int
 	hobby []string
 	Sex   bool
-}
-
-func TestCopyProperties(t *testing.T) {
-	// name与birthday字段将不会被拷贝
-	var src any = &G{"aitao", 100, []string{"pingpong", "badminton"}, true}
-	dst := CopyProperties(src).(*G)
-	fmt.Printf("%+v %p\n", src, &src)
-	fmt.Printf("%+v %p\n\n", dst, &dst)
-
-	dst.name = "kqai"
-	fmt.Printf("%+v %p\n", src, &src)
-	fmt.Printf("%+v %p\n", dst, &dst)
 }
 
 func TestDeepCopy_Array(t *testing.T) {
@@ -647,6 +607,46 @@ func TestDeepClone_String(t *testing.T) {
 	fmt.Printf("%+v %p\n", dst, &dst)
 
 	dst = "kqai"
+	fmt.Printf("%+v %p\n", src, &src)
+	fmt.Printf("%+v %p\n", dst, &dst)
+}
+
+func TestDeepClone_StructC(t *testing.T) {
+	src := C{"aitao", 100, time.Now(), []string{"ping pong", "badminton", "football"}}
+	dst := Deep(src).(C)
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("%+v\n\n", dst)
+
+	dst.name = "哆啦A梦" // modify an unreferenced type value.
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("%+v\n\n", dst)
+
+	dst.hobby[0] = "乒乓球" // modify a referenced type value.
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("%+v\n\n", dst)
+
+	// 只拷贝结构体中的已导出字段
+	dst = Deep(src, WithOpFlags(OnlyPublicField)).(C)
+	fmt.Printf("%+v %p\n", src, &src)
+	fmt.Printf("%+v %p\n\n", dst, &dst)
+
+	dst.name = "kqai"
+	fmt.Printf("%+v %p\n", src, &src)
+	fmt.Printf("%+v %p\n\n", dst, &dst)
+
+	dst = CopyProperties(src).(C)
+	fmt.Printf("%+v %p\n", src, &src)
+	fmt.Printf("%+v %p\n\n", dst, &dst)
+}
+
+func TestCopyProperties(t *testing.T) {
+	// name与birthday字段将不会被拷贝
+	var src any = &G{"aitao", 100, []string{"pingpong", "badminton"}, true}
+	dst := CopyProperties(src).(*G)
+	fmt.Printf("%+v %p\n", src, &src)
+	fmt.Printf("%+v %p\n\n", dst, &dst)
+
+	dst.name = "kqai"
 	fmt.Printf("%+v %p\n", src, &src)
 	fmt.Printf("%+v %p\n", dst, &dst)
 }
