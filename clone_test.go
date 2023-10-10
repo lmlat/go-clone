@@ -18,194 +18,19 @@ import (
  * @Url
  **/
 
-type PrivateStruct struct {
-	string      string
-	strings     []string
-	stringArr   [4]string
-	bool        bool
-	bools       []bool
-	byte        byte
-	bytes       []byte
-	int         int
-	ints        []int
-	int8        int8
-	int8s       []int8
-	int16       int16
-	int16s      []int16
-	int32       int32
-	int32s      []int32
-	int64       int64
-	int64s      []int64
-	uint        uint
-	uints       []uint
-	uint8       uint8
-	uint8s      []uint8
-	uint16      uint16
-	uint16s     []uint16
-	uint32      uint32
-	uint32s     []uint32
-	uint64      uint64
-	uint64s     []uint64
-	float32     float32
-	float32s    []float32
-	float64     float64
-	float64s    []float64
-	complex64   complex64
-	complex64s  []complex64
-	complex128  complex128
-	complex128s []complex128
-	iface       any
-	ifaces      []any
-}
-
-type PublicStruct struct {
-	String      string
-	Strings     []string
-	StringArr   [4]string
-	Bool        bool
-	Bools       []bool
-	Byte        byte
-	Bytes       []byte
-	Int         int
-	Ints        []int
-	Int8        int8
-	Int8s       []int8
-	Int16       int16
-	Int16s      []int16
-	Int32       int32
-	Int32s      []int32
-	Int64       int64
-	Int64s      []int64
-	Uint        uint
-	Uints       []uint
-	Uint8       uint8
-	Uint8s      []uint8
-	Uint16      uint16
-	Uint16s     []uint16
-	Uint32      uint32
-	Uint32s     []uint32
-	Uint64      uint64
-	Uint64s     []uint64
-	Float32     float32
-	Float32s    []float32
-	Float64     float64
-	Float64s    []float64
-	Complex64   complex64
-	Complex64s  []complex64
-	Complex128  complex128
-	Complex128s []complex128
-	Interface   any
-	Interfaces  []any
-}
-
-func TestClone_PrivateStruct_ZeroValue(t *testing.T) {
-	src := PrivateStruct{}
-	dst := Deep(src).(PrivateStruct)
+func TestDeepClone_Struct_ZeroValue(t *testing.T) {
+	src := A{}
+	dst := Deep(src).(A)
 	fmt.Printf("%+v\n", src)
-	fmt.Printf("\n%+v\n", dst)
+	fmt.Printf("%+v\n\n", dst)
+
+	dst.Int = 100
+	dst.uints = append(src.uints, 999)
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("%+v\n", dst)
 }
 
-func TestClone_PublicStruct_ZeroValue(t *testing.T) {
-	src := PublicStruct{}
-	dst := Deep(src).(PublicStruct)
-	fmt.Printf("%+v\n", src)
-	fmt.Printf("\n%+v\n", dst)
-}
-
-func TestClone_PrivateStruct(t *testing.T) {
-	src := PrivateStruct{
-		"kimchi",
-		[]string{"uni", "ika"},
-		[4]string{"malort", "barenjager", "fernet", "salmiakki"},
-		true,
-		[]bool{true, false, true},
-		'z',
-		[]byte("abc"),
-		42,
-		[]int{0, 1, 3, 4},
-		8,
-		[]int8{8, 9, 10},
-		16,
-		[]int16{16, 17, 18, 19},
-		32,
-		[]int32{32, 33},
-		64,
-		[]int64{64},
-		420,
-		[]uint{11, 12, 13},
-		81,
-		[]uint8{81, 82},
-		160,
-		[]uint16{160, 161, 162, 163, 164},
-		320,
-		[]uint32{320, 321},
-		640,
-		[]uint64{6400, 6401, 6402, 6403},
-		32.32,
-		[]float32{32.32, 33},
-		64.1,
-		[]float64{64, 65, 66},
-		complex64(-64 + 12i),
-		[]complex64{complex64(-65 + 11i), complex64(66 + 10i)},
-		complex128(-128 + 12i),
-		[]complex128{complex128(-128 + 11i), complex128(129 + 10i)},
-		nil,
-		[]any{42, true, "pan-galactic"},
-	}
-
-	dst := Deep(src).(PrivateStruct)
-	fmt.Printf("%+v\n", src)
-	fmt.Printf("\n%+v\n", dst)
-}
-
-func TestClone_PublicStruct(t *testing.T) {
-	src := PublicStruct{
-		String:      "kimchi",
-		Strings:     []string{"uni", "ika"},
-		StringArr:   [4]string{"malort", "barenjager", "fernet", "salmiakki"},
-		Bool:        true,
-		Bools:       []bool{true, false, true},
-		Byte:        'z',
-		Bytes:       []byte("abc"),
-		Int:         42,
-		Ints:        []int{0, 1, 3, 4},
-		Int8:        8,
-		Int8s:       []int8{8, 9, 10},
-		Int16:       16,
-		Int16s:      []int16{16, 17, 18, 19},
-		Int32:       32,
-		Int32s:      []int32{32, 33},
-		Int64:       64,
-		Int64s:      []int64{64},
-		Uint:        420,
-		Uints:       []uint{11, 12, 13},
-		Uint8:       81,
-		Uint8s:      []uint8{81, 82},
-		Uint16:      160,
-		Uint16s:     []uint16{160, 161, 162, 163, 164},
-		Uint32:      320,
-		Uint32s:     []uint32{320, 321},
-		Uint64:      640,
-		Uint64s:     []uint64{6400, 6401, 6402, 6403},
-		Float32:     32.32,
-		Float32s:    []float32{32.32, 33},
-		Float64:     64.1,
-		Float64s:    []float64{64, 65, 66},
-		Complex64:   complex64(-64 + 12i),
-		Complex64s:  []complex64{complex64(-65 + 11i), complex64(66 + 10i)},
-		Complex128:  complex128(-128 + 12i),
-		Complex128s: []complex128{complex128(-128 + 11i), complex128(129 + 10i)},
-		Interfaces:  []any{42, true, "pan-galactic"},
-	}
-	dst := Deep(src).(PublicStruct)
-	fmt.Printf("%+v\n", src)
-	fmt.Printf("\n%+v\n", dst)
-
-	fmt.Printf("%+v\n", src)
-	fmt.Printf("\n%+v\n", dst)
-}
-
-func TestClone_Func(t *testing.T) {
+func TestDeepClone_Func(t *testing.T) {
 	otherFunc := func(a, b int) int { return a - b }
 	srcFunc := func(a, b int) int { return a + b }
 	dstFunc := Deep(srcFunc).(func(a, b int) int)
@@ -217,7 +42,7 @@ func TestClone_Func(t *testing.T) {
 	fmt.Printf("%+v, %p\n", dstFunc(1, 2), dstFunc)
 }
 
-func TestClone_Slice(t *testing.T) {
+func TestDeepClone_Simple_Slice(t *testing.T) {
 	src := []int{1, 2, 3, 4, 5}
 	dst := Deep(src).([]int)
 	fmt.Printf("%+v, %p\n", src, src)
@@ -228,58 +53,125 @@ func TestClone_Slice(t *testing.T) {
 	fmt.Printf("\n%+v, %p\n", dst, dst)
 }
 
-func TestClone_Map(t *testing.T) {
-	m := map[string]*Test{
+func TestDeepClone_Complex_Slice(t *testing.T) {
+	src := []*Test{{100,
+		map[string]any{
+			"a": 10,
+			"b": 9,
+			"c": 8,
+		}}, {200,
+		map[string]any{
+			"d": 7,
+			"e": 6,
+			"f": 5,
+		}}, {300,
+		map[string]any{
+			"g": 4,
+			"h": 3,
+			"i": 2,
+		}}}
+	dst := Deep(src).([]*Test)
+	dst[0].I = 9999
+	fmt.Printf("%+v, %p, %v, %p, %v, %p\n", src, src, src[0].I, &src[0].I, src[0].M, &src[0].M)
+	fmt.Printf("%+v, %p, %v, %p, %v, %p\n", dst, dst, dst[0].I, &dst[0].I, dst[0].M, &dst[0].M)
+}
+
+func TestDeepClone_Map(t *testing.T) {
+	src := map[string]*Test{
 		"a": {
-			F: 123,
-			S: map[string]any{
+			I: 123,
+			M: map[string]any{
 				"cba": 321,
 			},
 		},
 		"b": {
-			F: 456,
-			S: map[string]any{
+			I: 456,
+			M: map[string]any{
 				"ghi": 789,
 			},
 		},
 	}
-	dst := Deep(m).(map[string]*Test)
+	dst := Deep(src).(map[string]*Test)
 
-	fmt.Printf("%+v, %p, %v, %v\n", m, m, m["a"].S, m["b"].F)
-	fmt.Printf("%+v, %p, %v, %v\n", dst, dst, dst["a"].S, dst["b"].F)
+	fmt.Printf("%+v, %p, %v, %v\n", src, src, src["a"].M, src["b"].I)
+	fmt.Printf("%+v, %p, %v, %v\n\n", dst, dst, dst["a"].M, dst["b"].I)
 
-	dst["a"].S["cba"] = 999
-	dst["b"].F = 888
-	fmt.Printf("%+v, %p, %v, %v\n", m, m, m["a"].S, m["b"].F)
-	fmt.Printf("%+v, %p, %v, %v\n", dst, dst, dst["a"].S, dst["b"].F)
+	dst["a"].M["cba"] = 999
+	dst["b"].I = 888
+	fmt.Printf("%+v, %p, %v, %v\n", src, src, src["a"].M, src["b"].I)
+	fmt.Printf("%+v, %p, %v, %v\n", dst, dst, dst["a"].M, dst["b"].I)
 }
 
-func TestClone_Nil_Pointer(t *testing.T) {
+type M struct {
+	M map[string]any
+	m map[string]any
+}
+
+func TestDeepClone_InStruct_Map(t *testing.T) {
+	a := assert.New(t)
+	m := map[string]any{"a": 1000, "b": 2000, "c": "lml", "d": true}
+	src := M{m, m}
+	dst := Deep(src).(M)
+	fmt.Printf("%+v %p %v %p\n", src.M, &src.M, src.m, &src.m)
+	fmt.Printf("%+v %p %v %p\n\n", dst.M, &dst.M, dst.m, &dst.m)
+
+	a.Use(&src, &dst)
+	// 字段M和m共享同一个map, 深拷贝后也只会存在一份
+	a.Assert(equalsAddr(src.m, src.M))
+
+	// 深拷贝结构体后它们的地址不相等.
+	a.Assert(nonEqualsAddr(&src, &dst))
+
+	// 对结构体中的m和M字段都会进行深拷贝操作, 但它们引用的数据是相同的.
+	a.Assert(nonEqualsAddr(&src.M, &dst.M))
+	a.Assert(nonEqualsAddr(&src.m, &dst.m))
+
+	// 深拷贝后也同样共享同一个map
+	a.Assert(equalsAddr(dst.m, dst.M))
+
+	// 修改dst.m的数据会直接影响dst.M中的数据, 但不会影响源数据.
+	a.Equal(&dst.m, &dst.M)
+	dst.m["b"] = 2222
+	a.Equal(&dst.m, &dst.M)
+
+	// 修改dst.m的数据会直接影响dst.M中的数据, 但不会影响源数据.
+	a.Equal(&dst.m, &dst.M)
+	dst.M["a"] = 1111
+	a.Equal(&dst.m, &dst.M)
+
+	fmt.Printf("%+v %p %v %p\n", src.M, &src.M, src.m, &src.m)
+	fmt.Printf("%+v %p %v %p\n", dst.M, &dst.M, dst.m, &dst.m)
+}
+func TestDeepClone_Nil_Pointer(t *testing.T) {
 	var uintPtr *uint
 	dstUintPtr := Deep(uintPtr).(*uint)
-
 	fmt.Printf("%+v, %p\n", uintPtr, uintPtr)
-	fmt.Printf("%+v, %p\n", dstUintPtr, dstUintPtr)
+	fmt.Printf("%+v, %p\n\n", dstUintPtr, dstUintPtr)
+
+	var uints uint = 100
+	dstUintPtr = &uints
+	fmt.Printf("%+v, %p\n", uintPtr, uintPtr)
+	fmt.Printf("%+v, %p\n", *dstUintPtr, dstUintPtr)
 }
 
-func TestClone_Pointer(t *testing.T) {
-	fmt.Println("====================克隆string指针====================")
+func TestDeepClone_Pointer(t *testing.T) {
+	fmt.Println("====================copy string pointer====================")
 	var str string
 	strPtr := &str
 	dstStrPtr := Deep(strPtr).(*string)
 	fmt.Printf("%+v, %v\n", str, *strPtr)
-	fmt.Printf("%+v, %v\n", str, *dstStrPtr)
+	fmt.Printf("%+v, %v\n\n", str, *dstStrPtr)
 
 	*dstStrPtr = "aitao"
 	fmt.Printf("%+v, %v\n", str, *strPtr)
 	fmt.Printf("%+v, %v\n", str, *dstStrPtr)
 
-	fmt.Println("====================克隆int指针====================")
+	fmt.Println("====================copy int pointer====================")
 	ints := 100
 	intPtr := &ints
 	dstIntPtr := Deep(intPtr).(*int)
 	fmt.Printf("%+v, %v\n", ints, *intPtr)
-	fmt.Printf("%+v, %v\n", ints, *dstIntPtr)
+	fmt.Printf("%+v, %v\n\n", ints, *dstIntPtr)
 
 	*dstIntPtr = 999
 	fmt.Printf("%+v, %v\n", ints, *intPtr)
@@ -293,22 +185,35 @@ type C struct {
 	hobby    []string
 }
 
-func TestClone_StructC(t *testing.T) {
+func TestDeepClone_StructC(t *testing.T) {
 	src := C{"aitao", 100, time.Now(), []string{"ping pong", "badminton", "football"}}
 	dst := Deep(src).(C)
 	fmt.Printf("%+v\n", src)
-	fmt.Printf("\n%+v\n", dst)
+	fmt.Printf("%+v\n\n", dst)
 
-	dst.name = "小阿梦" // modify an unreferenced type
+	dst.name = "哆啦A梦" // modify an unreferenced type value.
 	fmt.Printf("%+v\n", src)
-	fmt.Printf("\n%+v\n", dst)
+	fmt.Printf("%+v\n\n", dst)
 
-	dst.hobby[0] = "乒乓球" // modify a referenced type
+	dst.hobby[0] = "乒乓球" // modify a referenced type value.
 	fmt.Printf("%+v\n", src)
-	fmt.Printf("\n%+v\n", dst)
+	fmt.Printf("%+v\n\n", dst)
+
+	// 只拷贝结构体中的已导出字段
+	dst = Deep(src, WithOpFlags(OnlyPublicField)).(C)
+	fmt.Printf("%+v %p\n", src, &src)
+	fmt.Printf("%+v %p\n\n", dst, &dst)
+
+	dst.name = "kqai"
+	fmt.Printf("%+v %p\n", src, &src)
+	fmt.Printf("%+v %p\n\n", dst, &dst)
+
+	dst = CopyProperties(src).(C)
+	fmt.Printf("%+v %p\n", src, &src)
+	fmt.Printf("%+v %p\n\n", dst, &dst)
 }
 
-func TestClone_Struct_Pointer(t *testing.T) {
+func TestDeepClone_Struct_Pointer(t *testing.T) {
 	src := &C{"aitao", 100, time.Now(), []string{"ping pong", "badminton", "football"}}
 	dst := Deep(src).(*C)
 	fmt.Printf("%+v\n", src)
@@ -319,31 +224,19 @@ func TestClone_Struct_Pointer(t *testing.T) {
 	fmt.Printf("%+v\n", dst)
 }
 
-func TestClone_PrivateStruct_Pointer_ZeroValue(t *testing.T) {
-	src := &PrivateStruct{}
-	dst := Deep(src).(*PrivateStruct)
+func TestDeepClone_PrivateStruct_Pointer_ZeroValue(t *testing.T) {
+	src := &A{}
+	dst := Deep(src).(*A)
 	fmt.Printf("%+v\n", src)
 	fmt.Printf("%+v\n\n", dst)
 
-	dst.string = "aitao"
+	dst.Int = 100
 	dst.strings = append(dst.strings, "aitao")
 	fmt.Printf("%+v\n", src)
 	fmt.Printf("%+v\n", dst)
 }
 
-func TestClone_PublicStruct_Pointer_ZeroValue(t *testing.T) {
-	src := &PublicStruct{}
-	dst := Deep(src).(*PublicStruct)
-	fmt.Printf("%+v\n", src)
-	fmt.Printf("%+v\n\n", dst)
-
-	dst.String = "aitao"
-	dst.Strings = append(dst.Strings, "aitao")
-	fmt.Printf("%+v\n", src)
-	fmt.Printf("%+v\n", dst)
-}
-
-func TestClone_Struct_Time(t *testing.T) {
+func TestDeepClone_Struct_Time(t *testing.T) {
 	src, _ := time.ParseInLocation(time.DateTime, "2023-04-22 10:30:00", time.Local)
 	dst := Deep(src).(time.Time)
 	fmt.Printf("%v,%p\n", src, &src)
@@ -359,7 +252,7 @@ type A struct {
 	String  string
 	uints   []uint
 	strings []string
-	Map     map[string]int
+	MapA    map[string]int
 	MapB    map[string]*B
 	bs      []B
 	B
@@ -370,12 +263,12 @@ type B struct {
 	Vals []string
 }
 
-func TestClone_StructA(t *testing.T) {
+func TestDeepClone_StructA(t *testing.T) {
 	src := A{
 		Int:    42,
 		String: "Konichiwa",
 		uints:  []uint{0, 1, 2, 3},
-		Map:    map[string]int{"a": 1, "b": 2},
+		MapA:   map[string]int{"a": 1, "b": 2},
 		MapB: map[string]*B{
 			"hi":  &B{Vals: []string{"hello", "bonjour"}},
 			"bye": &B{Vals: []string{"good-bye", "au revoir"}},
@@ -389,35 +282,10 @@ func TestClone_StructA(t *testing.T) {
 	dst := Deep(src).(A)
 	fmt.Printf("%+v %p\n", src, &src)
 	fmt.Printf("%+v %p\n\n", dst, &dst)
+
 	dst.uints[0] = 1000
 	fmt.Printf("%+v %p\n", src, &src)
 	fmt.Printf("%+v %p\n", dst, &dst)
-}
-
-func TestDeep_BasicType(t *testing.T) {
-	srcInt := 42
-	dstInt := Deep(srcInt).(int)
-	fmt.Printf("%+v %p\n", srcInt, &srcInt)
-	fmt.Printf("\n%+v %p\n", dstInt, &dstInt)
-
-	srcString := "Hello, World!"
-	dstString := Deep(srcString).(string)
-	fmt.Printf("%+v %p\n", srcString, &srcString)
-	fmt.Printf("\n%+v %p\n", dstString, &dstString)
-
-	srcSlice := []int{1, 2, 3, 4, 5}
-	dstSlice := Deep(srcSlice).([]int)
-	fmt.Printf("%+v %p\n", srcSlice, &srcSlice)
-	fmt.Printf("\n%+v %p\n", dstSlice, &dstSlice)
-
-	type Person struct {
-		name string
-		age  int
-	}
-	srcPerson := Person{"Alice", 30}
-	dstPerson := Deep(srcPerson).(Person)
-	fmt.Printf("%+v %p\n", srcPerson, &srcPerson)
-	fmt.Printf("\n%+v %p\n", dstPerson, &dstPerson)
 }
 
 type D struct {
@@ -504,14 +372,14 @@ func TestCopyProperties(t *testing.T) {
 func TestDeepCopy_Array(t *testing.T) {
 	src := [2]*Test{
 		{
-			F: 123,
-			S: map[string]any{
+			I: 123,
+			M: map[string]any{
 				"abc": 123,
 			},
 		},
 		{
-			F: 456,
-			S: map[string]any{
+			I: 456,
+			M: map[string]any{
 				"def": 456,
 				"ghi": 789,
 			},
@@ -523,13 +391,13 @@ func TestDeepCopy_Array(t *testing.T) {
 	fmt.Printf("%+v,%p,%+v,%p,%+v,%p\n", src, &src, src[0], &src[0], src[1], &src[1])
 	fmt.Printf("%+v,%p,%+v,%p,%+v,%p\n", dst, &dst, dst[0], &dst[0], dst[1], &dst[1])
 
-	dst[0].F = 987
-	dst[1].S["ghi"] = 321
+	dst[0].I = 987
+	dst[1].M["ghi"] = 321
 	fmt.Printf("%+v,%p,%+v,%p,%+v,%p\n", src, &src, src[0], &src[0], src[1], &src[1])
 	fmt.Printf("%+v,%p,%+v,%p,%+v,%p\n", dst, &dst, dst[0], &dst[0], dst[1], &dst[1])
 }
 
-func TestCloneReflectType(t *testing.T) {
+func TestDeepCloneReflectType(t *testing.T) {
 	foo := reflect.TypeOf("aitao")
 	dst := Deep(foo).(reflect.Type)
 
@@ -587,8 +455,16 @@ type insider struct {
 	Simple
 }
 
-func TestClone_UnexportedFields(t *testing.T) {
-	unexported := &Unexported{
+func equalsAddr(a, b any) bool {
+	return reflect.ValueOf(a).Pointer() == reflect.ValueOf(b).Pointer()
+}
+
+func nonEqualsAddr(a, b any) bool {
+	return reflect.ValueOf(a).Pointer() != reflect.ValueOf(b).Pointer()
+}
+
+func TestDeepClone_UnexportedFields(t *testing.T) {
+	src := &Unexported{
 		insider: insider{
 			i:    -1,
 			i8:   -8,
@@ -634,51 +510,57 @@ func TestClone_UnexportedFields(t *testing.T) {
 		},
 	}
 	a := assert.New(t)
-	unexported.m["loop"] = &unexported.m
+	src.m["loop"] = &src.m
+	src.ptr = src
+	src.slice = []*Unexported{src}
+	dst := Deep(src).(*Unexported)
 
-	// Make pointer cycles.
-	unexported.ptr = unexported
-	unexported.slice = []*Unexported{unexported}
-	dst := Deep(unexported).(*Unexported)
-	a.Use(&unexported, &dst)
+	// array is deep copied.
+	a.Assert(!equalsAddr(&src.arr, &dst.arr))
 
-	// unsafe.Pointer is shadow copied.
-	a.Assert(dst.unsafePointer == unexported.unsafePointer)
-	unexported.unsafePointer = nil
+	fmt.Printf("address: %p %p\n", &src.m, &dst.m)
+	fmt.Println("map:", dst.m, src.m)
+
+	fmt.Printf("%+v %p\n\n", src, &src)
+	fmt.Printf("%+v %p\n", dst, &dst)
+
+	a.Use(&src, &dst)
+
+	// unsafe.Pointer is shallow copied.
+	a.Assert(dst.unsafePointer == src.unsafePointer)
+	src.unsafePointer = nil
 	dst.unsafePointer = nil
 
-	// chan cannot be compared, but its buffer can be verified.
-	a.Equal(cap(dst.ch), cap(unexported.ch))
-	unexported.ch = nil
+	// chan cannot be directly compared.
+	fmt.Println("channel capacity:", cap(src.ch), cap(dst.ch))
+	a.Equal(cap(dst.ch), cap(src.ch))
+	src.ch = nil
 	dst.ch = nil
 
-	// fn cannot be compared, but it can be called.
-	a.Equal(dst.fn("Hello"), unexported.fn("Hello"))
-	unexported.fn = nil
+	// func cannot be directly compared.
+	a.Equal(dst.fn("Hello"), src.fn("Hello"))
+	src.fn = nil
 	dst.fn = nil
 
-	// method cannot be compared, but it can be called.
+	// method cannot be compared.
 	a.Assert(dst.method != nil)
 	a.NilError(dst.method([]byte("1234")))
-	unexported.method = nil
+	src.method = nil
 	dst.method = nil
 
-	// cloned.m["loop"] must be exactly the same map of cloned.m.
+	// dst.m["loop"] must be exactly the same map of dst.m.
 	a.Assert(reflect.ValueOf(dst.m["loop"]).Elem().Pointer() == reflect.ValueOf(dst.m).Pointer())
-
 	// Don't test this map in reflect.DeepEqual due to bug in Go.
 	// https://github.com/golang/go/issues/33907
-	unexported.m["loop"] = nil
+	src.m["loop"] = nil
 	dst.m["loop"] = nil
 
-	// reflect.Type should be copied by value.
-	a.Equal(reflect.ValueOf(dst.t).Pointer(), reflect.ValueOf(unexported.t).Pointer())
+	// reflect.Type is shallow copied.
+	a.Assert(equalsAddr(src.t, dst.t))
 
-	// Finally, everything else should equal.
-	a.Equal(unexported, dst)
-
+	a.Equal(src, dst)
 }
-func TestClone_UnexportedStructMethod(t *testing.T) {
+func TestDeepClone_UnexportedStructMethod(t *testing.T) {
 	a := assert.New(t)
 
 	// Another complex case: clone a struct and a map of struct instead of ptr to a struct.
@@ -722,8 +604,6 @@ func TestShallow(t *testing.T) {
 	dst.birthday = time.Now()
 	fmt.Printf("%+v %p %p\n", src, &src, &src.birthday)
 	fmt.Printf("%+v %p %p\n", dst, &dst, &dst.birthday)
-
-	fmt.Println("=====================================================")
 }
 
 type H struct {
@@ -732,29 +612,36 @@ type H struct {
 }
 
 func TestCopyUnexportedFields(t *testing.T) {
+	a := assert.New(t)
+
 	src := H{func(a, b int) int {
 		return a + b
 	}, "aitao"}
+	dst := Shallow(src).(H)
+	a.Use(&src, &dst)
 
-	dst := Deep(src).(H)
-	fmt.Printf("%p %p\n", src.fn, &src.s)
-	fmt.Printf("%p %p\n\n", dst.fn, &dst.s)
+	// struct is deep copied.
+	a.Assert(nonEqualsAddr(&src, &dst))
+	// string is shallow copied.
+	a.Assert(nonEqualsAddr(&src.s, &dst.s))
+	// func is shallow copied.
+	a.Assert(equalsAddr(src.fn, dst.fn))
 
-	dst.s = "lml" // 因为结构体是值类型, 修改dst中的字符串并不会影响src中的字符串
+	// 结构体是值类型, 修改 dst.s 或 dst.fn 都不会影响 src.
+	a.Equal(src.s, dst.s)
+	dst.s = "lml"
+	a.NotEqual(src.s, dst.s)
+
+	a.Equal(src.fn(10, 20), dst.fn(10, 20))
 	dst.fn = func(a, b int) int {
 		return a * b
 	}
-	fmt.Println(src.fn(10, 20))
-	fmt.Printf("%p %p\n", src.fn, &src.s)
-	fmt.Printf("%p %p\n\n", dst.fn, &dst.s)
-
-	fmt.Printf("%+v %p\n", src, &src)
-	fmt.Printf("%+v %p\n", dst, &dst)
+	a.NotEqual(src.fn(10, 20), dst.fn(10, 20))
 }
 
-func TestCopy_String(t *testing.T) {
-	src := ""
-	dst := Deep(src).(string)
+func TestDeepClone_String(t *testing.T) {
+	src := "aitao"
+	dst := Shallow(src).(string)
 
 	fmt.Printf("%+v %p\n", src, &src)
 	fmt.Printf("%+v %p\n", dst, &dst)

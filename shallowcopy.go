@@ -75,6 +75,9 @@ func shallowCopy(src reflect.Value, ptr unsafe.Pointer) {
 	case reflect.Slice:
 		*(*reflect.SliceHeader)(ptr) = reflect.SliceHeader{Data: src.Pointer(), Len: src.Len(), Cap: src.Cap()}
 	case reflect.String:
+		// String content is read-only in memory.
+		// When copying a string, the string content is copied to a new object with a new address,
+		// but the content is the same as the original string.
 		reflect.NewAt(src.Type(), ptr).Elem().SetString(src.String())
 	case reflect.Struct:
 		t := src.Type()

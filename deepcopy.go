@@ -59,12 +59,18 @@ func WithOpFlags(flags OpFlags) Options {
 	}
 }
 
+func AddOpFlags(flags OpFlags) Options {
+	return func(ctx *Context) {
+		ctx.flags.Add(flags)
+	}
+}
+
 func init() {
 	ctx = &Context{
 		enableCache:      true,
 		cache:            cache{},
 		shallowCopyTypes: sync.Map{},
-		flags:            AllFields | DeepString | DeepArray,
+		flags:            AllFields | DeepArray,
 	}
 
 	// reflect.rtype is immutable because the Go language's type system is static at compile time,
@@ -114,13 +120,14 @@ func copyString(src, dst reflect.Value) {
 	}
 	t, size := src.Type(), src.Len()
 	bytes := reflect.MakeSlice(typeOfByteSlice, size, size)
+	// src is an unexported field.
 	if !src.CanInterface() {
 		src = reflect.ValueOf(src.String())
 	}
 	reflect.Copy(bytes, src)
-	dstPtr := reflect.New(t)
-	slice := bytes.Interface().([]byte)
-	*(*reflect.StringHeader)(dstPtr.UnsafePointer()) = *(*reflect.StringHeader)(unsafe.Pointer(&slice))
+	byteSlice := bytes.Interface().([]byte)
+	stringHeaderPtr := (*reflect.StringHeader)(unsafe.Pointer(&byteSlice))
+	dstPtr := reflect.NewAt(t, unsafe.Pointer(stringHeaderPtr))
 	dst.Set(dstPtr.Elem())
 }
 
@@ -145,7 +152,7 @@ func copyMap(src, dst reflect.Value) {
 	if src.IsNil() {
 		return
 	}
-	t := src.Type()
+	t, size := src.Type(), src.Len()
 	if ctx.enableCache && ctx.cache != nil {
 		k := cacheKey{ptr: src.Pointer(), typ: t}
 		if val, ok := ctx.cache[k]; ok {
@@ -153,21 +160,19 @@ func copyMap(src, dst reflect.Value) {
 			return
 		}
 	}
-	m := reflect.MakeMapWithSize(t, src.Len())
+	m := reflect.MakeMapWithSize(t, size)
 	if ctx.enableCache && ctx.cache != nil {
 		k := cacheKey{ptr: src.Pointer(), typ: t}
 		ctx.cache[k] = m // mark map accessed.
 	}
 	dst.Set(m)
 	for itr := src.MapRange(); itr.Next(); {
-		srcValue := itr.Value()
-		dstValue := rnew(srcValue).Elem()
-		deepCopy(srcValue, dstValue)
-
 		srcKey := itr.Key()
 		dstKey := rnew(srcKey).Elem()
 		deepCopy(srcKey, dstKey)
-
+		srcValue := itr.Value()
+		dstValue := rnew(srcValue).Elem()
+		deepCopy(srcValue, dstValue)
 		dst.SetMapIndex(srcKey, dstValue)
 	}
 }
@@ -186,7 +191,7 @@ func copySlice(src, dst reflect.Value) {
 			return
 		}
 	}
-	s := reflect.MakeSlice(src.Type(), srcLen, src.Cap())
+	s := reflect.MakeSlice(t, srcLen, src.Cap())
 	if ctx.enableCache && ctx.cache != nil {
 		k := cacheKey{src.Pointer(), t, srcLen}
 		ctx.cache[k] = s // mark slice accessed.
