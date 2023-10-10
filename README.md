@@ -41,15 +41,15 @@ import "github.com/lmlat/go-clone"
 Deep copy the value of a struct type, containing the fields in the struct that are not exported. 
 
 ```go
-type C struct {
+type A struct {
 	name     string
 	Age      int
 	birthday time.Time
 	hobby    []string
 }
 
-src := C{"aitao", 100, time.Now(), []string{"ping pong", "badminton", "football"}}
-dst := Deep(src).(C)
+src := A{"aitao", 100, time.Now(), []string{"ping pong", "badminton", "football"}}
+dst := Deep(src).(A)
 // When you modify the value of non-reference type, the source data is not affected.
 dst.name = "哆啦A梦" 
 // When you modify the value of reference type, the source data is not affected.
@@ -59,13 +59,27 @@ dst.hobby[0] = "乒乓球"
 Deep copy the value of a struct pointer type, containing the fields in the strcut that are not exported.
 
 ```go	
-src := &C{"aitao", 100, time.Now(), []string{"ping pong", "badminton", "football"}}
-dst := Deep(src).(*C) // deep copy value
+src := &A{"aitao", 100, time.Now(), []string{"ping pong", "badminton", "football"}}
+dst := Deep(src).(*A) // deep copy value
 ```
+Skip copying the specified fields in the struct via the 'ignore' tag:
+
+```go
+type B struct {
+    name     string `ignore:"name"`
+	Age      int
+	birthday time.Time
+	hobby    []string
+}
+
+src := &B{"aitao", 100, time.Now(), []string{"ping pong", "badminton", "football"}}
+dst := Deep(src).(*B)
+```
+
 Deep copy only the exported fields in the structure:
 
 ```go	
-dst = Deep(src, WithOpFlags(OnlyPublicField)).(C)
+dst = Deep(src, WithOpFlags(OnlyPublicField)).(A)
 // The same effect can be achieved using CopyProperties function.
 dst = CopyProperties(src).(C)
 ```
