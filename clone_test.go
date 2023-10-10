@@ -18,7 +18,7 @@ import (
  * @Url
  **/
 
-func TestDeepClone_Struct_ZeroValue(t *testing.T) {
+func TestDeepClone__StructA_ZeroValue(t *testing.T) {
 	src := A{}
 	dst := Deep(src).(A)
 	fmt.Printf("%+v\n", src)
@@ -142,6 +142,7 @@ func TestDeepClone_InStruct_Map(t *testing.T) {
 	fmt.Printf("%+v %p %v %p\n", src.M, &src.M, src.m, &src.m)
 	fmt.Printf("%+v %p %v %p\n", dst.M, &dst.M, dst.m, &dst.m)
 }
+
 func TestDeepClone_Nil_Pointer(t *testing.T) {
 	var uintPtr *uint
 	dstUintPtr := Deep(uintPtr).(*uint)
@@ -185,7 +186,7 @@ type C struct {
 	hobby    []string
 }
 
-func TestDeepClone_Struct_Pointer(t *testing.T) {
+func TestDeepClone_StructC_Pointer(t *testing.T) {
 	src := &C{"aitao", 100, time.Now(), []string{"ping pong", "badminton", "football"}}
 	dst := Deep(src).(*C)
 	fmt.Printf("%+v\n", src)
@@ -196,7 +197,7 @@ func TestDeepClone_Struct_Pointer(t *testing.T) {
 	fmt.Printf("%+v\n", dst)
 }
 
-func TestDeepClone_PrivateStruct_Pointer_ZeroValue(t *testing.T) {
+func TestDeepClone_StructA_ZeroValue(t *testing.T) {
 	src := &A{}
 	dst := Deep(src).(*A)
 	fmt.Printf("%+v\n", src)
@@ -258,6 +259,40 @@ func TestDeepClone_StructA(t *testing.T) {
 	dst.uints[2] = 1000
 	fmt.Printf("%+v %p\n", src, &src)
 	fmt.Printf("%+v %p\n", dst, &dst)
+}
+
+func TestClone(t *testing.T) {
+	srcInt := 42
+	dstInt := Deep(srcInt).(int)
+	fmt.Printf("int:\t%p %p\n", &srcInt, &dstInt)
+
+	srcUint := uint(66)
+	dstUint := Deep(srcUint).(uint)
+	fmt.Printf("uint:\t%p %p\n", &srcUint, &dstUint)
+
+	srcStr := "Hello, World!"
+	dstStr := Deep(srcStr).(string)
+	fmt.Printf("string:\t%p %p\n", &srcStr, &dstStr)
+
+	b := true
+	srcUnsafePointer := unsafe.Pointer(&b)
+	dstUnsafePointer := Deep(srcUnsafePointer).(unsafe.Pointer)
+	fmt.Printf("Pointer:%p %p\n", srcUnsafePointer, dstUnsafePointer)
+
+	srcUintptr := uintptr(100)
+	dstUintptr := Deep(srcUintptr).(uintptr)
+	fmt.Printf("uintptr:%p %p\n", &srcUintptr, &dstUintptr)
+}
+func TestMultilevelPointers(t *testing.T) {
+	srcInt := 42
+	srcPtrInt := &srcInt
+	srcPtrInt2 := &srcPtrInt
+	srcPtrInt3 := &srcPtrInt2
+	srcPtrInt4 := &srcPtrInt3
+	srcPtrInt5 := &srcPtrInt4
+
+	dst := Deep(srcPtrInt5).(*****int)
+	fmt.Printf("%+v, %v, %v\n", dst, *****dst, reflect.TypeOf(dst))
 }
 
 type D struct {
@@ -609,6 +644,220 @@ func TestDeepClone_String(t *testing.T) {
 	dst = "kqai"
 	fmt.Printf("%+v %p\n", src, &src)
 	fmt.Printf("%+v %p\n", dst, &dst)
+}
+
+type PrivateStruct struct {
+	string      string
+	strings     []string
+	stringArr   [4]string
+	bool        bool
+	bools       []bool
+	byte        byte
+	bytes       []byte
+	int         int
+	ints        []int
+	int8        int8
+	int8s       []int8
+	int16       int16
+	int16s      []int16
+	int32       int32
+	int32s      []int32
+	int64       int64
+	int64s      []int64
+	uint        uint
+	uints       []uint
+	uint8       uint8
+	uint8s      []uint8
+	uint16      uint16
+	uint16s     []uint16
+	uint32      uint32
+	uint32s     []uint32
+	uint64      uint64
+	uint64s     []uint64
+	float32     float32
+	float32s    []float32
+	float64     float64
+	float64s    []float64
+	complex64   complex64
+	complex64s  []complex64
+	complex128  complex128
+	complex128s []complex128
+	iface       interface{}
+	ifaces      []interface{}
+}
+
+type PublicStruct struct {
+	String      string
+	Strings     []string
+	StringArr   [4]string
+	Bool        bool
+	Bools       []bool
+	Byte        byte
+	Bytes       []byte
+	Int         int
+	Ints        []int
+	Int8        int8
+	Int8s       []int8
+	Int16       int16
+	Int16s      []int16
+	Int32       int32
+	Int32s      []int32
+	Int64       int64
+	Int64s      []int64
+	Uint        uint
+	Uints       []uint
+	Uint8       uint8
+	Uint8s      []uint8
+	Uint16      uint16
+	Uint16s     []uint16
+	Uint32      uint32
+	Uint32s     []uint32
+	Uint64      uint64
+	Uint64s     []uint64
+	Float32     float32
+	Float32s    []float32
+	Float64     float64
+	Float64s    []float64
+	Complex64   complex64
+	Complex64s  []complex64
+	Complex128  complex128
+	Complex128s []complex128
+	Interface   interface{}
+	Interfaces  []interface{}
+}
+
+func TestClone_PrivateStruct_ZeroValue(t *testing.T) {
+	src := PrivateStruct{}
+	dst := Deep(src).(PrivateStruct)
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("\n%+v\n", dst)
+
+	dst.string = "aitao"
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("\n%+v\n", dst)
+}
+
+func TestClone_PublicStruct_ZeroValue(t *testing.T) {
+	src := PublicStruct{}
+	dst := Deep(src).(PublicStruct)
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("\n%+v\n", dst)
+
+	dst.String = "aitao"
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("\n%+v\n", dst)
+}
+
+func TestClone_PrivateStruct(t *testing.T) {
+	src := PrivateStruct{
+		"kimchi",
+		[]string{"uni", "ika"},
+		[4]string{"malort", "barenjager", "fernet", "salmiakki"},
+		true,
+		[]bool{true, false, true},
+		'z',
+		[]byte("abc"),
+		42,
+		[]int{0, 1, 3, 4},
+		8,
+		[]int8{8, 9, 10},
+		16,
+		[]int16{16, 17, 18, 19},
+		32,
+		[]int32{32, 33},
+		64,
+		[]int64{64},
+		420,
+		[]uint{11, 12, 13},
+		81,
+		[]uint8{81, 82},
+		160,
+		[]uint16{160, 161, 162, 163, 164},
+		320,
+		[]uint32{320, 321},
+		640,
+		[]uint64{6400, 6401, 6402, 6403},
+		32.32,
+		[]float32{32.32, 33},
+		64.1,
+		[]float64{64, 65, 66},
+		complex64(-64 + 12i),
+		[]complex64{complex64(-65 + 11i), complex64(66 + 10i)},
+		complex128(-128 + 12i),
+		[]complex128{complex128(-128 + 11i), complex128(129 + 10i)},
+		nil,
+		[]interface{}{42, true, "pan-galactic"},
+	}
+
+	dst := Deep(src).(PrivateStruct)
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("\n%+v\n", dst)
+
+	dst.string = "aitao"
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("\n%+v\n", dst)
+}
+
+func TestClone_PublicStruct(t *testing.T) {
+	src := PublicStruct{
+		String:      "kimchi",
+		Strings:     []string{"uni", "ika"},
+		StringArr:   [4]string{"malort", "barenjager", "fernet", "salmiakki"},
+		Bool:        true,
+		Bools:       []bool{true, false, true},
+		Byte:        'z',
+		Bytes:       []byte("abc"),
+		Int:         42,
+		Ints:        []int{0, 1, 3, 4},
+		Int8:        8,
+		Int8s:       []int8{8, 9, 10},
+		Int16:       16,
+		Int16s:      []int16{16, 17, 18, 19},
+		Int32:       32,
+		Int32s:      []int32{32, 33},
+		Int64:       64,
+		Int64s:      []int64{64},
+		Uint:        420,
+		Uints:       []uint{11, 12, 13},
+		Uint8:       81,
+		Uint8s:      []uint8{81, 82},
+		Uint16:      160,
+		Uint16s:     []uint16{160, 161, 162, 163, 164},
+		Uint32:      320,
+		Uint32s:     []uint32{320, 321},
+		Uint64:      640,
+		Uint64s:     []uint64{6400, 6401, 6402, 6403},
+		Float32:     32.32,
+		Float32s:    []float32{32.32, 33},
+		Float64:     64.1,
+		Float64s:    []float64{64, 65, 66},
+		Complex64:   complex64(-64 + 12i),
+		Complex64s:  []complex64{complex64(-65 + 11i), complex64(66 + 10i)},
+		Complex128:  complex128(-128 + 12i),
+		Complex128s: []complex128{complex128(-128 + 11i), complex128(129 + 10i)},
+		Interfaces:  []interface{}{42, true, "pan-galactic"},
+	}
+	dst := Deep(src).(PublicStruct)
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("\n%+v\n", dst)
+
+	dst.String = "aitao"
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("\n%+v\n", dst)
+}
+
+func TestClone_PrivateStruct_Pointer_ZeroValue(t *testing.T) {
+	src := &PrivateStruct{}
+	dst := Deep(src).(*PrivateStruct)
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("\n%+v\n", dst)
+}
+
+func TestClone_PublicStruct_Pointer_ZeroValue(t *testing.T) {
+	src := &PublicStruct{}
+	dst := Deep(src).(*PublicStruct)
+	fmt.Printf("%+v\n", src)
+	fmt.Printf("\n%+v\n", dst)
 }
 
 func TestDeepClone_StructC(t *testing.T) {
